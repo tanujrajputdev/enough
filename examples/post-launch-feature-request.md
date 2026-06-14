@@ -45,4 +45,16 @@ Not on any of the three. 18% activation is the fire: of 340 people convinced eno
 
 ---
 
-**Note the moves:** the strongest request still doesn't get an auto-BUILD — it gets the problem behind it solved at 5% of the cost, with a hard trigger for the expensive version; every WATCH gets a verbatim trigger and a reply to send; and the triage ends by pointing at the metric the features were distracting from.
+## Written to the Ledger
+
+Three triage files get written to `.enough/`:
+
+- `.enough/<today>-triage-mobile-app.md` — VERDICT: DO MANUALLY, with the PWA + message-in play
+- `.enough/<today>-triage-notion-export.md` — VERDICT: WATCH, promotion trigger named
+- `.enough/<today>-triage-mood-charts.md` — VERDICT: WATCH, promotion trigger named
+
+The next time the user opens a Claude session about this product and says "should I add charts?" the skill reads the prior triage and refuses to re-litigate without new evidence: *"You triaged mood-tracking charts on <date>. The verdict was WATCH with the trigger: 5+ paying users describe wanting patterns in their entries, in their own words. Has that fired?"* If not, conversation ends in one exchange.
+
+---
+
+**Note the moves:** the strongest request still doesn't get an auto-BUILD — it gets the problem behind it solved at 5% of the cost, with a hard trigger for the expensive version; every WATCH gets a verbatim trigger and a reply to send; the triage ends by pointing at the metric the features were distracting from; the Ledger write is what stops the same question from costing the builder another hour next month.

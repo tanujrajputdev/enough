@@ -4,6 +4,8 @@
 
 > "Been building a newsletter analytics tool for indie writers for about 3 months — connects to Substack/Beehiiv exports, shows open-rate trends, best send times, subscriber-growth charts. Honestly it's been 'two weeks from done' for like six weeks. Working: CSV import, the three main charts, auth. Remaining: Beehiiv API integration (CSV works but API would be smoother), email reports, comparison view between newsletters, fixing chart colors, writing tests, the pricing page, and I want to rework the import flow because it feels clunky. Is this ready or am I crazy?"
 
+**Setup note:** the project has no prior `.enough/` ledger (this is its first encounter with the skill). The skill detects the six-week stall as a likely drift signal, but since there's no spec to compare against, it produces a Ship Verdict directly and offers to retroactively write a spec to ground future audits.
+
 **Enough output:**
 
 ---
@@ -40,4 +42,14 @@ A writer you've never spoken to uploads their export, sees their best send time,
 
 ---
 
-**Note the moves:** the verdict names the six-week pattern instead of politely ignoring it; "clunky" is reclassified from blocker to feeling; every cut gets a trigger so it's deferred, not dismissed; the ship plan is literal enough to execute without thinking.
+## After the verdict — retroactive Ledger write
+
+Because there's no prior spec, the skill offers to write one now alongside the Ship Verdict:
+
+> *Before you ship Friday: I'll write `.enough/<today>-spec.md` and `.enough/<today>-ship.md`. The spec captures the hypothesis you've been building toward but never wrote down, plus the kill criterion you'd otherwise skip — "10 paying writers within 30 days of launch, or sunset." Both files get signed under your name. Next time you come back to this project, the Drift Audit will check whether `/src/integrations/beehiiv`, `/src/compare`, and email-report code stayed out — and if the metric moved.*
+
+The retroactive spec is what makes the next session's Drift Audit possible (see `examples/drift-audit-saas.md` for that session).
+
+---
+
+**Note the moves:** the verdict names the six-week pattern instead of politely ignoring it; "clunky" is reclassified from blocker to feeling; every cut gets a trigger so it's deferred, not dismissed; the ship plan is literal enough to execute without thinking; the Ledger write isn't gated on a perfect spec — the skill offers to bank what's known now so future audits have something to measure against.

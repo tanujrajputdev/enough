@@ -4,11 +4,17 @@ Use this mode when the user is partway through building and asks some version of
 
 The hidden truth of this mode: builders asking "is it ready?" are almost never blocked by missing features. They're blocked by fear wearing a feature costume. The job is to separate **true blockers** from **felt blockers** and force the call.
 
+## Before you start
+
+If `.enough/` exists with a `spec` for this product, read it. The Core Loop, CORE list, and Definition of Done are already named — don't reconstruct them from scratch. Use them as the canonical reference and walk the build against the *signed* loop, not the loop the builder remembers.
+
+If the spec's deadline has already passed, or the latest commit was >7 days ago, run a quick Drift Audit (see `references/drift-audit.md`) before the Ship Verdict — the cut drift often *is* the felt-blockers list. Don't render two full audits; just inline the drift findings into the Ship Verdict and route to Sunset if the Drift Audit calls TIME TO SUNSET.
+
 ## Method
 
-### Step 1 — Reconstruct the Core Loop
+### Step 1 — Reconstruct the Core Loop (or read it)
 
-Before judging readiness, establish what "ready" means: state the hypothesis and the Core Loop from what the user has shared (or ask the single question "what's the one path a user takes to get value?"). Readiness is measured against the loop — not against the feature list, the competitor, or the builder's taste.
+Before judging readiness, establish what "ready" means: state the hypothesis and the Core Loop from the Ledger if present, otherwise from what the user has shared (or ask the single question "what's the one path a user takes to get value?"). Readiness is measured against the loop — not against the feature list, the competitor, or the builder's taste.
 
 ### Step 2 — Walk the loop against what exists
 

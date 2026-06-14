@@ -55,6 +55,21 @@ The riskier side of this marketplace is demand — chefs who cook for money alre
 ## Manual-for-now plan
 You recruit 5 chefs by hand. You collect menus every Sunday over WhatsApp and update the page. You confirm orders, coordinate delivery (chefs deliver or you use Porter/Dunzo per order), handle refunds, and pay chefs weekly. This manual layer is not the compromise — it's the research department.
 
+## Adversarial preemption
+
+The cuts you will most likely try to reverse, named in advance:
+
+- **Around day 4, you will want to start chef self-serve onboarding** because typing 5 chefs' menus into a page by hand will feel inefficient. The rebuttal: typing menus by hand IS the user research — you'll notice which chefs are flaky, which photos sell, which prices land. Evidence that would overturn the cut: >15 chefs onboarded AND your phone-based process taking >4 hrs/week.
+- **Around day 6, you will want to add reviews/ratings** because "real marketplaces have them." The rebuttal: at 5 chefs and ~20 customers, you ARE the rating system — you'll tell people "chef Meera's rajma is the move" over WhatsApp. Evidence that would overturn: >12 active chefs AND inbound questions like "which chef is best for [diet]?" that you can't keep up with.
+- **Around day 8, you will want to build a customer mobile app** because someone in your X DMs will say "I'd use this every day if it were an app." The rebuttal: cut-pattern #8 — they'll add it to home screen as a PWA if the food is good. Evidence that would overturn: 30+ paying customers AND ≥5 explicitly citing the lack of an app as the reason for churn.
+
+## Signed
+**[Builder Name]** — [today's date]
+
+I will measure against the One Metric on [today + 31 days = kill date]. If fewer than 5 of the first 20 customers renew for week 2, I will run Sunset mode and decide KILL / REVIVE / HAND OFF without negotiating with myself.
+
 ---
 
-**Note the moves:** two-sided idea reduced to a one-sided test; 11 features became 3 builds and a sheet; the 3-month timeline collapsed because the timeline was holding infrastructure, not the experiment.
+This spec gets written to `.enough/<today>-spec.md` per `references/ledger-format.md`. Future Drift Audits will check whether `/chef-onboarding`, `/reviews`, or any mobile-app code appears in the repo without the trigger having fired — and quote the signed cuts above when it does.
+
+**Note the moves:** two-sided idea reduced to a one-sided test; 11 features became 3 builds and a sheet; the 3-month timeline collapsed because the timeline was holding infrastructure, not the experiment; adversarial preemption names the three reversal attempts most likely to come, with the exact evidence that would legitimately overturn each cut.

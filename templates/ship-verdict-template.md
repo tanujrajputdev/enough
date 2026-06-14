@@ -1,3 +1,13 @@
+---
+id: YYYY-MM-DD-ship
+type: ship
+product: [Product Name]
+created: YYYY-MM-DD
+signed_by: [Builder Name]
+signed_at: YYYY-MM-DD
+supersedes: [prior ship id, or omit]
+---
+
 # Ship Verdict — [Product Name]
 
 ## VERDICT: [SHIP NOW / SHIP AFTER (X hrs) / NOT ENOUGH YET]
@@ -17,3 +27,6 @@
 
 ## Definition of Done
 [One sentence.]
+
+## Audit log
+<!-- Appended by drift audits. Do not edit manually. -->
