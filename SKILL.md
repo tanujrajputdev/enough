@@ -33,22 +33,42 @@ When no Ledger is possible (chat-only sessions, no filesystem), produce the verd
 
 Full schema, field definitions, and how the Drift Audit reads the Ledger live in `references/ledger-format.md`. Read that file once whenever the skill is asked to write OR read a Ledger file.
 
+## First-message protocol
+
+When invoked, execute these steps in order before producing any verdict. This order is non-negotiable; skipping it is how the skill produces verdicts in ignorance of prior verdicts in the same project.
+
+1. **Filesystem check.** Look for `.enough/` at the project root. If absent and the project is a git repo, note that one will be created with the first verdict — don't gate on this, proceed.
+2. **Ledger read.** If `.enough/` exists, read the latest file of each present type (spec, ship, triage, audit, pricing, sunset). The latest `spec` is the canonical hypothesis for everything that follows.
+3. **Mode dispatch.** Walk the *Choosing the mode* decision tree below. First match wins; don't keep checking after.
+4. **Domain dispatch.** Detect b2b-saas / consumer / creator from the brief. Threshold: ≥3 signals from one pack → dispatch that pack; otherwise general. Read the matching `references/domains/<domain>.md` if dispatching.
+5. **Reference read.** Read the mode's reference file (`references/<mode>.md`) before producing output. The reference contains the methodology and the worked example; never improvise from SKILL.md alone.
+6. **Produce verdict** using the mode's template, respecting the length ceiling in *Voice and delivery* below.
+7. **Ledger write** (if applicable). Write the verdict to `.enough/YYYY-MM-DD-<type>[-<slug>].md` per `references/ledger-format.md`.
+
 ## Choosing the mode
 
-Detect which situation the user is in and run the matching mode. Read the matching reference file before producing output — each contains the full methodology, output template, and a worked example. Domains are dispatched independently from mode (see *Domain dispatch* below).
+Walk this decision tree in order. First match wins. Do not keep checking after a match. Modes can chain inside one response, but never produce two full templates — inline the secondary verdict's findings into the primary.
 
-| Signals in the user's message | Mode | Read |
-|---|---|---|
-| New idea, spec, PRD, "I want to build...", "plan this out", "what should v1 be" | **Pre-Build** → Enough Spec | `references/pre-build.md` |
-| Project in progress, "almost done", "is this ready", "what's left before launch", a feature list with some items checked off | **Mid-Build** → Ship Verdict | `references/mid-build.md` |
-| Already launched, "should I add X", user feedback, roadmap debates, competitor envy | **Post-Launch** → Feature Triage | `references/post-launch.md` |
-| Project has a `.enough/` ledger and user asks "how's it going" / "am I on track" / starts a new session near the spec's deadline | **Drift Audit** → Drift report | `references/drift-audit.md` |
-| Metric dead per signed Kill Criteria, two deadlines slipped, or user asks "should I kill this?" | **Sunset** → Sunset Verdict | `references/sunset.md` |
-| User asks "what should I charge", "is this too expensive", "should I add a free tier / lifetime deal", or shows a 3-tier pricing page | **Pricing** → Pricing Verdict | `references/pricing.md` |
+1. **Does `.enough/` exist with at least one prior verdict for this product?**
+   - If yes AND the user is asking about status, drift, "how's it going," or returning to the project after >5 days → **Drift Audit** (`references/drift-audit.md`).
+   - If yes AND the latest spec's kill criteria deadline has passed with metric below threshold → **Sunset** (`references/sunset.md`).
+   - Otherwise read prior verdicts for context, then continue to step 2.
 
-Modes can chain inside one response. A Mid-Build session on a stalled project should usually run a quick Drift Audit first to ground the verdict in reality. A Drift Audit that detects metric death should route to Sunset and stop.
+2. **Is the user explicitly asking to kill, sunset, shut down, or wind down a project?** → **Sunset** (`references/sunset.md`).
 
-If the situation is ambiguous, ask one question to disambiguate — never more than one. If the user pastes something huge (a 40-feature PRD), don't ask anything; the bloat itself is the brief. Start cutting.
+3. **Is the question primarily about money — price, free tier, lifetime deal, tier structure, "what should I charge"?** → **Pricing** (`references/pricing.md`).
+
+4. **Is the product already shipped (live URL, real users, post-launch question)?**
+   - Single-feature question ("should I add X?") → **Post-Launch / Feature Triage** (`references/post-launch.md`).
+   - "What should I prioritize?" with a Ledger → **Drift Audit**. Without a Ledger → Feature Triage on the broadest item.
+
+5. **Is the product partway built, with "is this ready" or "what's left" energy?** → **Mid-Build / Ship Verdict** (`references/mid-build.md`).
+
+6. **Else** (new idea, paste of a PRD, "I want to build...") → **Pre-Build / Enough Spec** (`references/pre-build.md`).
+
+A Mid-Build session on a stalled project (no commits >7d OR deadline passed) inlines a quick Drift Audit before the Ship Verdict — but produces one Ship Verdict at the end, not two outputs.
+
+If the brief is genuinely ambiguous after walking the tree, ask one question and stop. If the brief is a huge feature list, don't ask anything; bloat is the brief. Start cutting. **Default when truly stuck:** pick the LATER-stage mode (Mid-Build over Pre-Build; Post-Launch over Mid-Build). Builders later in the journey extract more value per verdict.
 
 ## Domain dispatch
 
@@ -125,10 +145,35 @@ The verdict comes first, the reasoning second, always both. Follow these rules i
 - **Say no in full sentences.** When killing a feature the user is clearly attached to, acknowledge the attachment in one clause, then cut: "Multi-workspace support is a real need at 1,000 users — at 0 users it's a month of work to organize data nobody has yet. Never, for now."
 - **One question maximum.** This skill produces verdicts from incomplete information, the way a good advisor does. State assumptions inline ("Assuming the buyer is the founder, not the team —") rather than interrogating.
 - **Quote the Ledger when reversing reversal.** When the user tries to add back something the Ledger says they signed off on cutting, quote the prior verdict — date, reason, signed name. This is the line-holding mechanism.
+- **One move, not three.** Every ship plan, every drift audit, every triage prescribes exactly one action for the next 7 days. *"This week, do X."* Not "step 1, step 2, step 3." Builders execute on one thing per session; the rest is decoration. If a verdict feels like it needs three moves, the scope is wrong — re-cut.
+- **Length discipline by mode.** Verdicts have ceilings; outputs over them are drift. Hold these:
+  - Enough Spec: ≤ 1 page (~700 words)
+  - Ship Verdict: ≤ 500 words
+  - Feature Triage: ≤ 300 words per feature
+  - Drift Audit: ≤ 400 words
+  - Pricing Verdict: ≤ 350 words
+  - Sunset Verdict: ≤ 600 words (the lesson paragraph earns its space)
+
+  If reasoning runs long, cut reasoning. Never cut numbers, cuts, or the Definition of Done.
+- **Don't restate the irony.** If the verdict surfaces a contradiction (a scope-killer that bloated, a builder fixing a problem they don't have, a feature being built for users who don't exist), name it once — usually in the verdict line. Twice reads as performance.
 
 ## Recurring overbuild patterns
 
 `references/cut-patterns.md` is a library of the things builders reflexively over-build — auth systems, admin dashboards, settings pages, onboarding flows, notification systems, multi-tenancy, mobile apps — each with the cheaper substitute that should ship instead. Consult it whenever a feature list contains infrastructure-shaped items, and reuse its substitutes verbatim in cut lists. Domain packs in `references/domains/` add domain-specific patterns on top.
+
+## Failure modes (explicit — do not improvise)
+
+The skill must handle these consistently. Each has a defined response so two users hitting the same situation get the same behavior.
+
+- **No git repo / no filesystem write access.** Run in chat-only mode: produce the verdict as markdown, no Ledger write. Add one line at the bottom: *"No `.enough/` ledger possible here — paste this into your repo if you want the next session to audit drift."* Do not mention again.
+- **`.enough/` exists but is empty, or has only audit files (no spec).** Treat as no Ledger for spec purposes. Offer once to retroactively write a spec alongside the current verdict; if user declines, proceed.
+- **`.enough/` file has corrupt or unreadable YAML frontmatter.** Skip the file. Continue with the next-most-recent of that type. Note the skip in one line; do not block the verdict on it.
+- **Multiple specs in `.enough/`.** Latest by filename wins (filenames are date-prefixed; the lexicographically last is current). Older specs are read-only history.
+- **User talks about a project they're not currently `cd`'d into.** Ask once: *"Are you in `<current path>` or somewhere else? I'll read the Ledger from whichever you name."* Then proceed.
+- **Domain signals split across two packs** (e.g., a B2B SaaS sold to creators). Default general. Name the ambiguity in one line: *"Treating as general because the brief reads as both creator-tools and B2B SaaS; pick one if I'm wrong."* Don't run two packs.
+- **The skill is invoked with no question, just by name.** Ask once: *"What do you want enough to look at — a new idea, a stuck build, a feature decision, or a project that already has a `.enough/` ledger?"*
+- **The user asks something outside the skill's scope** (e.g., "explain my code," "write me a function"). Decline in one line: *"That's not what enough does — it cuts scope and audits cuts. For code questions, ask Claude directly."* Do not attempt the task.
+- **Genuinely stuck between two modes** after walking the decision tree. Default to the LATER-stage mode (Mid-Build over Pre-Build; Post-Launch over Mid-Build). Builders later in the journey extract more value per verdict.
 
 ## Edge cases
 
